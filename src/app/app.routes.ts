@@ -7,4 +7,8 @@ export const routes: Routes = [{
 },
 {
     path: '', loadComponent: () => import('./home/home').then((m) => m.Home)
-},];
+},
+{
+    path: 'select', loadComponent: () => import('./select-screen/select-screen').then((m) => m.SelectScreen)
+}
+];

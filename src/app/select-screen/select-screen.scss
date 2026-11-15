@@ -1,0 +1,208 @@
+:host {
+  display: block;
+  width: 100vw;
+  height: 100dvh;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  font-family: 'Fredoka', 'Nunito', sans-serif;
+}
+
+.game-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #7dd3fc;
+}
+
+.bg-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center bottom;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* TOP NAV BAR */
+.top-nav-bar {
+  position: absolute;
+  top: clamp(14px, 3vmin, 28px);
+  left: clamp(14px, 3vmin, 28px);
+  right: clamp(14px, 3vmin, 28px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 30;
+}
+
+.icon-btn {
+  width: clamp(52px, 8.5vmin, 72px);
+  height: clamp(52px, 8.5vmin, 72px);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #ffffff, #f1f5f9);
+  border: clamp(3px, 0.5vmin, 5px) solid #e2e8f0;
+  box-shadow:
+    0 6px 0 #cbd5e1,
+    0 10px 20px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: clamp(24px, 4vmin, 32px);
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
+}
+
+.icon-btn:active {
+  transform: translateY(4px);
+  box-shadow: 0 2px 0 #cbd5e1;
+}
+
+.home-nav-btn {
+  border-color: #7dd3fc;
+  background: radial-gradient(circle at 35% 30%, #e0f2fe, #38bdf8);
+  box-shadow: 0 6px 0 #0284c7;
+}
+.home-nav-btn:active {
+  box-shadow: 0 2px 0 #0284c7;
+}
+
+.sound-btn {
+  background: radial-gradient(circle at 35% 30%, #fde047, #f59e0b);
+  border-color: #fef08a;
+  box-shadow: 0 6px 0 #b45309;
+}
+.sound-btn.is-muted {
+  background: radial-gradient(circle at 35% 30%, #e2e8f0, #94a3b8);
+  border-color: #f8fafc;
+  box-shadow: 0 6px 0 #475569;
+}
+
+.music-icon {
+  width: 62%;
+  height: 62%;
+}
+.mute-icon {
+  font-size: clamp(22px, 4vmin, 32px);
+}
+
+/* UI CONTAINER & BANNER */
+.ui-container {
+  position: relative;
+  z-index: 20;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(16px, 3vh, 32px);
+  box-sizing: border-box;
+  gap: clamp(20px, 4.5vh, 40px);
+}
+
+.prompt-banner {
+  background: rgba(255, 255, 255, 0.92);
+  padding: clamp(12px, 2vmin, 20px) clamp(32px, 6vw, 64px);
+  border-radius: 999px;
+  border: 4px solid #ffffff;
+  box-shadow:
+    0 10px 25px rgba(0, 0, 0, 0.08),
+    inset 0 -4px 0 #e2e8f0;
+}
+
+.prompt-text {
+  margin: 0;
+  font-size: clamp(24px, 4.8vmin, 42px);
+  font-weight: 900;
+  color: #0284c7;
+  text-align: center;
+  text-shadow: 1px 2px 0 #bae6fd;
+}
+
+/* GRID 3 CÁNH CỬA */
+.doors-grid {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(16px, 3.5vw, 40px);
+  width: 100%;
+  max-width: 960px;
+}
+
+.door-card {
+  flex: 1;
+  max-width: 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.door-card:hover {
+  transform: translateY(-10px) scale(1.03);
+}
+
+.door-card.active {
+  transform: scale(0.95);
+}
+
+.door-image-wrapper {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  filter: drop-shadow(0 14px 24px rgba(0, 0, 0, 0.16));
+}
+
+.door-image-wrapper img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.door-label-badge {
+  margin-top: clamp(10px, 2vmin, 18px);
+  background: #ffffff;
+  padding: clamp(10px, 1.8vmin, 16px) clamp(16px, 2.5vw, 28px);
+  border-radius: 999px;
+  border: 3px solid #e2e8f0;
+  box-shadow:
+    0 6px 0 #cbd5e1,
+    0 10px 20px rgba(0, 0, 0, 0.08);
+  width: 85%;
+  text-align: center;
+}
+
+.door-label-badge span {
+  font-size: clamp(16px, 2.6vmin, 22px);
+  font-weight: 900;
+  color: #1e293b;
+  letter-spacing: 0.5px;
+}
+
+/* RESPONSIVE CHO THIẾT BỊ DI ĐỘNG DỌC (PORTRAIT MOBILE) */
+@media (max-width: 768px) and (orientation: portrait) {
+  .ui-container {
+    justify-content: flex-start;
+    padding-top: 10vh;
+    gap: 20px;
+  }
+
+  .doors-grid {
+    flex-direction: column;
+    max-width: 240px;
+    gap: 16px;
+  }
+
+  .door-card {
+    max-width: 210px;
+  }
+}

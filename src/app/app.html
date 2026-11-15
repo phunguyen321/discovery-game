@@ -1,1 +1,14 @@
-<router-outlet></router-outlet>
+<div class="game-viewport">
+  @if (currentScreen() === 'home') {
+    <div #screenEl class="screen-box">
+      <app-home (startGame)="switchToScreen('select')" />
+    </div>
+  } @else {
+    <div #screenEl class="screen-box">
+      <app-select-screen
+        (goHome)="switchToScreen('home')"
+        (selectGame)="handleSelectGame($event)"
+      />
+    </div>
+  }
+</div>

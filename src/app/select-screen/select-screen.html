@@ -1,0 +1,66 @@
+<div class="game-stage">
+  <!-- LỚP 1: NỀN ĐỒNG CỎ 3D (Dùng chung với màn Home) -->
+  <img
+    src="assets/images/home/bg-meadow.jpg"
+    alt="Đồng cỏ xanh"
+    class="bg-layer"
+    draggable="false"
+  />
+
+  <!-- LỚP 2: NÚT VỀ TRANG CHỦ & NÚT ÂM THANH -->
+  <div class="top-nav-bar">
+    <button
+      type="button"
+      class="icon-btn home-nav-btn"
+      (click)="goHome.emit()"
+      aria-label="Về trang chủ"
+    >
+      🏠
+    </button>
+
+    <button
+      type="button"
+      class="icon-btn sound-btn"
+      [class.is-muted]="isMuted()"
+      (click)="toggleAudio($event)"
+      aria-label="Bật tắt âm thanh"
+    >
+      @if (!isMuted()) {
+        <svg viewBox="0 0 24 24" class="music-icon">
+          <path
+            d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"
+            fill="#FFFFFF"
+            stroke="#B45309"
+            stroke-width="1.5"
+          />
+        </svg>
+      } @else {
+        <span class="mute-icon">🔇</span>
+      }
+    </button>
+  </div>
+
+  <!-- LỚP 3: NỘI DUNG CHÍNH (TIÊU ĐỀ & 3 CÁNH CỬA) -->
+  <div class="ui-container">
+    <div class="prompt-banner">
+      <h2 class="prompt-text">Bé muốn khám phá gì nào?</h2>
+    </div>
+
+    <div class="doors-grid">
+      @for (door of doors; track door.id) {
+        <div
+          class="door-card"
+          [class.active]="activeDoor() === door.id"
+          (click)="onSelectDoor(door.id)"
+        >
+          <div class="door-image-wrapper">
+            <img [src]="door.img" [alt]="door.alt" draggable="false" />
+          </div>
+          <div class="door-label-badge">
+            <span>{{ door.title }}</span>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>
