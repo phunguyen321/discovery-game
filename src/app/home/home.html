@@ -1,0 +1,150 @@
+<div class="game-container">
+  <!-- Canvas 3D chạy ngầm tạo chiều sâu sinh động -->
+  <canvas #threeCanvas class="three-bg-canvas"></canvas>
+
+  <!-- THANH ĐIỀU HƯỞNG CHUNG -->
+  @if (currentScreen() !== 'home') {
+    <header class="game-header">
+      <div class="header-left">
+        <button class="nav-btn home-btn" (click)="goToScreen('home')" title="Về trang chủ">
+          🏠 <span>Trang chủ</span>
+        </button>
+        @if (currentScreen() !== 'select' && currentScreen() !== 'success') {
+          <button class="nav-btn back-btn" (click)="goToScreen('select')" title="Quay lại">
+            ⬅️ <span>Chọn thử thách</span>
+          </button>
+        }
+      </div>
+
+      <button class="nav-btn audio-btn" (click)="toggleAudio()" [class.muted]="isAudioMuted()">
+        {{ isAudioMuted() ? '🔇 Tắt tiếng' : '🔊 Âm thanh' }}
+      </button>
+    </header>
+  }
+
+  <!-- NỘI DUNG CHÍNH -->
+  <main class="game-content">
+    <!-- MÀN HÌNH 1: TRANG CHỦ -->
+    @if (currentScreen() === 'home') {
+      <section class="screen home-screen fade-in">
+        <div class="hero-banner">
+          <div class="mascots">
+            <span class="mascot-bounce">👩‍🏫</span>
+            <span class="mascot-bounce delay">🐰</span>
+          </div>
+          <h1 class="game-title">BÉ ƠI, CÙNG KHÁM PHÁ!</h1>
+          <p class="ai-voice-hint">"Xin chào các bé! Hôm nay chúng mình cùng khám phá nhé!"</p>
+
+          <button class="btn-primary start-btn" (click)="goToScreen('select')">BẮT ĐẦU</button>
+        </div>
+
+        <button class="audio-float-btn" (click)="toggleAudio()">
+          {{ isAudioMuted() ? '🔇' : '🔊' }}
+        </button>
+      </section>
+    }
+
+    <!-- MÀN HÌNH 2: CHỌN THỬ THÁCH -->
+    @if (currentScreen() === 'select') {
+      <section class="screen select-screen fade-in">
+        <h2 class="screen-heading">Bé muốn khám phá gì nào?</h2>
+
+        <div class="door-grid">
+          <div class="door-card door-3a" (click)="goToScreen('game-3a')">
+            <div class="door-arch">
+              <div class="door-icon">⚽</div>
+            </div>
+            <h3>TÌM ĐỒ VẬT</h3>
+            <span class="door-tag">Bóng, vịt, gấu</span>
+          </div>
+
+          <div class="door-card door-3b" (click)="goToScreen('game-3b')">
+            <div class="door-arch">
+              <div class="door-icon">🐔</div>
+            </div>
+            <h3>TÌM CON VẬT</h3>
+            <span class="door-tag">Gà, chó, mèo</span>
+          </div>
+
+          <div class="door-card door-3c" (click)="goToScreen('game-3c')">
+            <div class="door-arch">
+              <div class="door-icon">🔴</div>
+            </div>
+            <h3>TÌM MÀU ĐỎ</h3>
+            <span class="door-tag">Quả bóng đỏ</span>
+          </div>
+        </div>
+      </section>
+    }
+
+    <!-- MÀN HÌNH 3A, 3B, 3C: GAMEPLAY -->
+    @if (
+      currentScreen() === 'game-3a' ||
+      currentScreen() === 'game-3b' ||
+      currentScreen() === 'game-3c'
+    ) {
+      @let activeGame =
+        screenData[
+          currentScreen() === 'game-3a'
+            ? 'game-3a'
+            : currentScreen() === 'game-3b'
+              ? 'game-3b'
+              : 'game-3c'
+        ];
+
+      <section class="screen gameplay-screen fade-in">
+        <div class="instruction-banner">
+          <span class="teacher-avatar">👩‍🏫</span>
+          <div class="speech-bubble">{{ activeGame.prompt }}</div>
+        </div>
+
+        <div class="items-grid">
+          @for (item of activeGame.items; track item.id) {
+            <div
+              class="item-card"
+              [class.is-correct]="selectedItemId() === item.id && item.isCorrect"
+              [class.is-wrong]="selectedItemId() === item.id && !item.isCorrect"
+              (click)="handleSelect(item)"
+            >
+              <div class="item-3d-sphere" [style.background]="item.colorHex || ''">
+                <span class="item-emoji">{{ item.emoji }}</span>
+              </div>
+              <span class="item-label">{{ item.label }}</span>
+            </div>
+          }
+        </div>
+
+        <!-- PHẢN HỒI VÀ NÚT TIẾP TỤC ĐÚNG THEO MOCKUP -->
+        @if (feedbackType()) {
+          <div
+            class="feedback-toast"
+            [class.correct]="feedbackType() === 'correct'"
+            [class.incorrect]="feedbackType() === 'incorrect'"
+          >
+            <span>{{ feedbackType() === 'correct' ? '🌟' : '💡' }} {{ feedbackMessage() }}</span>
+          </div>
+        }
+
+        @if (showNextButton()) {
+          <button class="btn-next-step pop-in" (click)="goToScreen('success')">TIẾP TỤC ➡️</button>
+        }
+      </section>
+    }
+
+    <!-- MÀN HÌNH 4: HOÀN THÀNH -->
+    @if (currentScreen() === 'success') {
+      <section class="screen success-screen fade-in">
+        <div class="success-card">
+          <div class="success-mascots">🎉 👩‍🏫 🐰 🏆</div>
+          <h2 class="congrats-title">HOAN HÔ! BÉ ĐÃ KHÁM PHÁ THẬT GIỎI!</h2>
+          <p class="teacher-praise">Tuyệt quá! Bé đã hoàn thành thử thách rồi!</p>
+
+          <div class="success-actions">
+            <button class="btn-secondary" (click)="goToScreen('select')">🔄 CHƠI LẠI</button>
+            <button class="btn-primary btn-sm" (click)="goToScreen('home')">🏠 VỀ TRANG CHỦ</button>
+          </div>
+        </div>
+      </section>
+    }
+  </main>
+</div>
