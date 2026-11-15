@@ -3,22 +3,20 @@ import { Component, output, signal } from '@angular/core';
 @Component({
   selector: 'app-select-screen',
   templateUrl: './select-screen.html',
-  styleUrl: './select-screen.scss'
+  styleUrl: './select-screen.scss',
+  standalone: true
 })
 export class SelectScreen {
-  // Phát sự kiện khi bé chọn 1 trong 3 thử thách
   selectGame = output<string>();
-
-  // Phát sự kiện nếu bé muốn về lại trang Home
   goHome = output<void>();
 
   isMuted = signal<boolean>(false);
   activeDoor = signal<string | null>(null);
 
   doors = [
-    { id: 'game-3a', title: 'TÌM ĐỒ VẬT', img: '/images/door-yellow.png', alt: 'Cửa tìm đồ vật' },
-    { id: 'game-3b', title: 'TÌM CON VẬT', img: '/images/door-pink.png', alt: 'Cửa tìm con vật' },
-    { id: 'game-3c', title: 'TÌM MÀU ĐỎ', img: '/images/door-purple.png', alt: 'Cửa tìm màu đỏ' }
+    { id: 'game-3a', title: 'TÌM ĐỒ VẬT', img: '/images/balloon-door.png', alt: 'Cửa tìm đồ vật' },
+    { id: 'game-3b', title: 'TÌM CON VẬT', img: '/images/animal-door.png', alt: 'Cửa tìm con vật' },
+    { id: 'game-3c', title: 'TÌM MÀU ĐỎ', img: '/images/apple-door.png', alt: 'Cửa tìm màu đỏ' }
   ];
 
   ngOnInit(): void {
@@ -36,13 +34,16 @@ export class SelectScreen {
   }
 
   onSelectDoor(gameId: string): void {
+    // Ngăn chặn bấm nhiều lần khi đã chọn 1 ô
+    if (this.activeDoor() !== null) return;
+
     this.activeDoor.set(gameId);
     this.playTapSoundAndVoice(gameId);
 
-    // Hiệu ứng mở cửa nhẹ 400ms trước khi routing sang màn hình chơi tương ứng
+    // Giữ hiệu ứng phóng to & tia sáng tỏa ra trong 650ms rồi chuyển màn hình
     setTimeout(() => {
       this.selectGame.emit(gameId);
-    }, 400);
+    }, 650);
   }
 
   private playPromptVoice(): void {

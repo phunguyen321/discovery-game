@@ -1,11 +1,6 @@
 <div class="game-stage">
-  <!-- LỚP 1: NỀN ĐỒNG CỎ 3D (Dùng chung với màn Home) -->
-  <img
-    src="assets/images/home/bg-meadow.jpg"
-    alt="Đồng cỏ xanh"
-    class="bg-layer"
-    draggable="false"
-  />
+  <!-- LỚP 1: NỀN ĐỒNG CỎ 3D -->
+  <img src="/images/bg-screen2.png" alt="Đồng cỏ xanh" class="bg-layer" draggable="false" />
 
   <!-- LỚP 2: NÚT VỀ TRANG CHỦ & NÚT ÂM THANH -->
   <div class="top-nav-bar">
@@ -50,9 +45,12 @@
       @for (door of doors; track door.id) {
         <div
           class="door-card"
-          [class.active]="activeDoor() === door.id"
+          [class.is-selected]="activeDoor() === door.id"
           (click)="onSelectDoor(door.id)"
         >
+          <!-- CHÙM TIA SÁNG RẼ QUẠT TỎA RA TỪ PHÍA SAU -->
+          <div class="sunburst-rays"></div>
+
           <div class="door-image-wrapper">
             <img [src]="door.img" [alt]="door.alt" draggable="false" />
           </div>

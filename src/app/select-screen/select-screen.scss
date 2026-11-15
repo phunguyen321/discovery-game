@@ -27,12 +27,12 @@
   pointer-events: none;
 }
 
-/* TOP NAV BAR */
+/* TOP NAV BAR - Tối ưu khoảng cách an toàn (safe-area) */
 .top-nav-bar {
   position: absolute;
-  top: clamp(14px, 3vmin, 28px);
-  left: clamp(14px, 3vmin, 28px);
-  right: clamp(14px, 3vmin, 28px);
+  top: max(env(safe-area-inset-top, 0px), clamp(10px, 2.2vmin, 24px));
+  left: max(env(safe-area-inset-left, 0px), clamp(14px, 2.5vmin, 28px));
+  right: max(env(safe-area-inset-right, 0px), clamp(14px, 2.5vmin, 28px));
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -40,58 +40,61 @@
 }
 
 .icon-btn {
-  width: clamp(52px, 8.5vmin, 72px);
-  height: clamp(52px, 8.5vmin, 72px);
+  width: clamp(46px, 7.5vmin, 66px);
+  height: clamp(46px, 7.5vmin, 66px);
   border-radius: 50%;
   background: radial-gradient(circle at 35% 30%, #ffffff, #f1f5f9);
-  border: clamp(3px, 0.5vmin, 5px) solid #e2e8f0;
+  border: clamp(2.5px, 0.4vmin, 4px) solid #e2e8f0;
   box-shadow:
-    0 6px 0 #cbd5e1,
-    0 10px 20px rgba(0, 0, 0, 0.15);
+    0 5px 0 #cbd5e1,
+    0 8px 16px rgba(0, 0, 0, 0.15);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-size: clamp(24px, 4vmin, 32px);
+  font-size: clamp(20px, 3.5vmin, 28px);
   transition:
     transform 0.12s ease,
     box-shadow 0.12s ease;
-}
 
-.icon-btn:active {
-  transform: translateY(4px);
-  box-shadow: 0 2px 0 #cbd5e1;
+  &:active {
+    transform: translateY(3px);
+    box-shadow: 0 2px 0 #cbd5e1;
+  }
 }
 
 .home-nav-btn {
   border-color: #7dd3fc;
   background: radial-gradient(circle at 35% 30%, #e0f2fe, #38bdf8);
-  box-shadow: 0 6px 0 #0284c7;
-}
-.home-nav-btn:active {
-  box-shadow: 0 2px 0 #0284c7;
+  box-shadow: 0 5px 0 #0284c7;
+
+  &:active {
+    box-shadow: 0 2px 0 #0284c7;
+  }
 }
 
 .sound-btn {
   background: radial-gradient(circle at 35% 30%, #fde047, #f59e0b);
   border-color: #fef08a;
-  box-shadow: 0 6px 0 #b45309;
-}
-.sound-btn.is-muted {
-  background: radial-gradient(circle at 35% 30%, #e2e8f0, #94a3b8);
-  border-color: #f8fafc;
-  box-shadow: 0 6px 0 #475569;
+  box-shadow: 0 5px 0 #b45309;
+
+  &.is-muted {
+    background: radial-gradient(circle at 35% 30%, #e2e8f0, #94a3b8);
+    border-color: #f8fafc;
+    box-shadow: 0 5px 0 #475569;
+  }
 }
 
 .music-icon {
-  width: 62%;
-  height: 62%;
-}
-.mute-icon {
-  font-size: clamp(22px, 4vmin, 32px);
+  width: 60%;
+  height: 60%;
 }
 
-/* UI CONTAINER & BANNER */
+.mute-icon {
+  font-size: clamp(20px, 3.5vmin, 28px);
+}
+
+/* UI CONTAINER & BANNER - Tối ưu không gian dọc linh hoạt */
 .ui-container {
   position: relative;
   z-index: 20;
@@ -101,108 +104,193 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: clamp(16px, 3vh, 32px);
+  padding: clamp(10px, 2vh, 24px) clamp(16px, 3vw, 32px);
   box-sizing: border-box;
-  gap: clamp(20px, 4.5vh, 40px);
+  gap: clamp(14px, 3.2vh, 32px);
 }
 
 .prompt-banner {
-  background: rgba(255, 255, 255, 0.92);
-  padding: clamp(12px, 2vmin, 20px) clamp(32px, 6vw, 64px);
+  background: rgba(255, 255, 255, 0.94);
+  padding: clamp(8px, 1.5vmin, 16px) clamp(24px, 4.5vw, 52px);
   border-radius: 999px;
-  border: 4px solid #ffffff;
+  border: 3.5px solid #ffffff;
   box-shadow:
-    0 10px 25px rgba(0, 0, 0, 0.08),
-    inset 0 -4px 0 #e2e8f0;
+    0 8px 20px rgba(0, 0, 0, 0.08),
+    inset 0 -3px 0 #e2e8f0;
 }
 
 .prompt-text {
   margin: 0;
-  font-size: clamp(24px, 4.8vmin, 42px);
+  font-size: clamp(20px, 4.2vmin, 36px);
   font-weight: 900;
   color: #0284c7;
   text-align: center;
   text-shadow: 1px 2px 0 #bae6fd;
 }
 
-/* GRID 3 CÁNH CỬA */
+/* GRID 3 CÁNH CỬA - Tự co giãn theo màn hình */
 .doors-grid {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: clamp(16px, 3.5vw, 40px);
   width: 100%;
-  max-width: 960px;
+  max-width: 920px;
 }
 
 .door-card {
+  position: relative;
   flex: 1;
-  max-width: 280px;
+  max-width: clamp(180px, 26vw, 270px);
   display: flex;
   flex-direction: column;
   align-items: center;
   cursor: pointer;
-  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  &:hover {
+    transform: translateY(-8px) scale(1.03);
+  }
+
+  /* CHÙM TIA SÁNG RẼ QUẠT PHÍA SAU */
+  .sunburst-rays {
+    position: absolute;
+    top: 42%;
+    left: 50%;
+    width: 180%;
+    aspect-ratio: 1 / 1;
+    transform: translate(-50%, -50%) scale(0.3);
+    z-index: 0;
+    opacity: 0;
+    pointer-events: none;
+
+    background: repeating-conic-gradient(
+      from 0deg,
+      rgba(255, 255, 255, 0.92) 0deg 10deg,
+      rgba(253, 224, 71, 0.65) 10deg 15deg,
+      transparent 15deg 30deg
+    );
+
+    -webkit-mask-image: radial-gradient(circle, rgba(0, 0, 0, 1) 25%, rgba(0, 0, 0, 0) 70%);
+    mask-image: radial-gradient(circle, rgba(0, 0, 0, 1) 25%, rgba(0, 0, 0, 0) 70%);
+
+    transition:
+      opacity 0.25s ease,
+      transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  &.is-selected {
+    transform: scale(1.15) translateY(-10px);
+    z-index: 40;
+
+    .sunburst-rays {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.05);
+      animation: rotate-sunburst 8s linear infinite;
+    }
+
+    .door-label-badge {
+      background: #38bdf8;
+      border-color: #ffffff;
+      box-shadow:
+        0 7px 0 #0284c7,
+        0 12px 20px rgba(2, 132, 199, 0.3);
+
+      span {
+        color: #ffffff;
+      }
+    }
+  }
 }
 
-.door-card:hover {
-  transform: translateY(-10px) scale(1.03);
-}
-
-.door-card.active {
-  transform: scale(0.95);
+@keyframes rotate-sunburst {
+  from {
+    transform: translate(-50%, -50%) scale(1.05) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1.05) rotate(360deg);
+  }
 }
 
 .door-image-wrapper {
+  position: relative;
+  z-index: 2;
   width: 100%;
   aspect-ratio: 3 / 4;
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  filter: drop-shadow(0 14px 24px rgba(0, 0, 0, 0.16));
+  filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.16));
 }
 
 .door-image-wrapper img {
   width: 100%;
-  height: auto;
+  height: 100%;
   object-fit: contain;
+  max-height: 52vh; /* Đảm bảo hình ảnh không bị tràn chiều cao trên màn hình hẹp */
 }
 
 .door-label-badge {
-  margin-top: clamp(10px, 2vmin, 18px);
+  position: relative;
+  z-index: 3;
+  margin-top: clamp(8px, 1.8vmin, 16px);
   background: #ffffff;
-  padding: clamp(10px, 1.8vmin, 16px) clamp(16px, 2.5vw, 28px);
+  padding: clamp(8px, 1.5vmin, 14px) clamp(12px, 2vw, 24px);
   border-radius: 999px;
   border: 3px solid #e2e8f0;
   box-shadow:
-    0 6px 0 #cbd5e1,
-    0 10px 20px rgba(0, 0, 0, 0.08);
-  width: 85%;
+    0 5px 0 #cbd5e1,
+    0 8px 16px rgba(0, 0, 0, 0.08);
+  width: 88%;
   text-align: center;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .door-label-badge span {
-  font-size: clamp(16px, 2.6vmin, 22px);
+  font-size: clamp(13px, 2.3vmin, 19px);
   font-weight: 900;
   color: #1e293b;
   letter-spacing: 0.5px;
+  transition: color 0.3s ease;
 }
 
-/* RESPONSIVE CHO THIẾT BỊ DI ĐỘNG DỌC (PORTRAIT MOBILE) */
-@media (max-width: 768px) and (orientation: portrait) {
+/* TỐI ƯU RIÊNG CHO MÀN HÌNH MÁY TÍNH BẢNG & ĐIỆN THOẠI NGANG (LANDSCAPE) CHIỀU CAO THẤP */
+@media (max-height: 550px) {
   .ui-container {
-    justify-content: flex-start;
-    padding-top: 10vh;
-    gap: 20px;
+    padding-top: max(env(safe-area-inset-top, 0px), 8px);
+    gap: 10px;
+  }
+
+  .prompt-banner {
+    padding: 6px 20px;
+    border-width: 2.5px;
+  }
+
+  .prompt-text {
+    font-size: clamp(16px, 3.2vmin, 22px);
   }
 
   .doors-grid {
-    flex-direction: column;
-    max-width: 240px;
-    gap: 16px;
+    gap: 18px;
+    max-width: 620px;
   }
 
   .door-card {
-    max-width: 210px;
+    max-width: clamp(130px, 22vw, 175px);
+  }
+
+  .door-image-wrapper img {
+    max-height: 44vh;
+  }
+
+  .door-label-badge {
+    padding: 4px 8px;
+    margin-top: 5px;
+    border-width: 2px;
+    box-shadow: 0 3px 0 #cbd5e1;
+  }
+
+  .door-label-badge span {
+    font-size: clamp(11px, 2vmin, 14px);
   }
 }

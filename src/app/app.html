@@ -1,14 +1,22 @@
 <div class="game-viewport">
-  @if (currentScreen() === 'home') {
-    <div #screenEl class="screen-box">
-      <app-home (startGame)="switchToScreen('select')" />
-    </div>
-  } @else {
-    <div #screenEl class="screen-box">
-      <app-select-screen
-        (goHome)="switchToScreen('home')"
-        (selectGame)="handleSelectGame($event)"
-      />
-    </div>
+  @switch (currentScreen()) {
+    @case ('home') {
+      <div #screenEl class="screen-box">
+        <app-home (startGame)="switchToScreen('select')" />
+      </div>
+    }
+    @case ('select') {
+      <div #screenEl class="screen-box">
+        <app-select-screen
+          (goHome)="switchToScreen('home')"
+          (selectGame)="handleSelectGame($event)"
+        />
+      </div>
+    }
+    @case ('gameplay') {
+      <div #screenEl class="screen-box">
+        <app-find-item (goBack)="switchToScreen('select')" />
+      </div>
+    }
   }
 </div>

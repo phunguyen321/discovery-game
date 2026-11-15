@@ -1,0 +1,77 @@
+<div class="game-stage">
+  <!-- LỚP 1: NỀN ĐỒNG CỎ 3D -->
+  <img src="/images/bg-screen2.png" alt="Nền trò chơi" class="bg-layer" draggable="false" />
+
+  <!-- LỚP 2: THANH ĐIỀU HƯỚNG TRÊN -->
+  <div class="top-nav-bar">
+    <button
+      type="button"
+      class="icon-btn back-select-btn"
+      (click)="goBack.emit()"
+      aria-label="Quay lại chọn màn chơi"
+    >
+      🏠
+    </button>
+
+    <button
+      type="button"
+      class="icon-btn sound-btn"
+      [class.is-muted]="isMuted()"
+      (click)="toggleAudio($event)"
+      aria-label="Bật tắt âm thanh"
+    >
+      @if (!isMuted()) {
+        🔊
+      } @else {
+        🔇
+      }
+    </button>
+  </div>
+
+  <!-- LỚP 3: NỘI DUNG CHÍNH TRÒ CHƠI -->
+  <div class="ui-container">
+    <!-- KHUNG HƯỚNG DẪN NHÂN VẬT (BONG BÓNG THOẠI & SPEAKER CHUẨN) -->
+    <div class="speech-banner-wrapper" (click)="playInstructionVoice()">
+      <div class="character-avatar-container">
+        <img
+          src="/images/character-avatar.png"
+          alt="Nhân vật hướng dẫn"
+          class="character-img"
+          draggable="false"
+        />
+      </div>
+
+      <div class="comic-speech-bubble">
+        <span class="speech-text">Bé tìm quả bóng nhé!</span>
+        <!-- Biểu tượng Speaker trực quan có hiệu ứng sóng âm -->
+        <div class="speaker-wave-box">
+          <span class="speaker-icon">🔊</span>
+          <span class="wave-ring"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- KHU VỰC ĐỒ VẬT (HÌNH ẢNH TO RÕ, NỔI BẬT TRÊN NỀN) -->
+    <div class="items-grid">
+      @for (item of items; track item.id) {
+        <div
+          class="item-target"
+          [class.is-correct-selected]="selectedId() === item.id && item.isTarget"
+          [class.is-wrong-selected]="selectedId() === item.id && !item.isTarget"
+          [class.is-dimmed]="selectedId() !== null && selectedId() !== item.id"
+          (click)="onSelectItem(item)"
+        >
+          <!-- TIA SÁNG RẼ QUẠT PHÍA SAU KHI CHỌN ĐÚNG -->
+          @if (item.isTarget) {
+            <div class="sunburst-rays"></div>
+          }
+
+          <!-- HÌNH ẢNH ĐỒ VẬT TÁCH NỀN (KÍCH THƯỚC TO) -->
+          <div class="item-image-wrapper">
+            <img [src]="item.img" [alt]="item.alt" draggable="false" />
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>
