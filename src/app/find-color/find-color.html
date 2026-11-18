@@ -1,0 +1,158 @@
+<div class="game-stage find-color-stage">
+  <!-- BACKGROUND -->
+  <img src="/images/bg-screen2.png" alt="Thế giới sắc màu" class="bg-layer" draggable="false" />
+
+  <!-- COLOR WORLD DECORATIONS -->
+  <div class="color-decoration color-bubble bubble-one"></div>
+  <div class="color-decoration color-bubble bubble-two"></div>
+  <div class="color-decoration color-bubble bubble-three"></div>
+
+  <div class="color-decoration color-star star-one">✦</div>
+  <div class="color-decoration color-star star-two">✧</div>
+  <div class="color-decoration color-star star-three">✦</div>
+
+  <div class="scene-glow scene-glow-left"></div>
+  <div class="scene-glow scene-glow-right"></div>
+
+  <!-- TOP NAVIGATION -->
+  <div class="top-nav-bar">
+    <button
+      type="button"
+      class="icon-btn back-select-btn"
+      (click)="handleGoBack()"
+      [disabled]="isBusy()"
+      aria-label="Quay lại"
+    >
+      🏠
+    </button>
+
+    <button
+      type="button"
+      class="icon-btn sound-btn"
+      [class.is-muted]="isMuted()"
+      (click)="toggleAudio($event)"
+      aria-label="Bật tắt âm thanh"
+    >
+      @if (!isMuted()) {
+        🔊
+      } @else {
+        🔇
+      }
+    </button>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="ui-container">
+    <!-- INSTRUCTION BANNER -->
+    <button
+      type="button"
+      class="instruction-banner"
+      (click)="replayInstructionAudio()"
+      [disabled]="isBusy() || isCompleted()"
+      aria-label="Nghe lại hướng dẫn"
+    >
+      <span class="instruction-sparkle sparkle-one">✦</span>
+      <span class="instruction-sparkle sparkle-two">✧</span>
+
+      <!-- CHARACTER -->
+      <div class="character-avatar-container">
+        <div class="avatar-glow"></div>
+
+        <img
+          src="/images/character-avatar.png"
+          alt="Nhân vật hướng dẫn"
+          class="character-img"
+          draggable="false"
+        />
+      </div>
+
+      <!-- ONE LINE INSTRUCTION -->
+      <div class="instruction-bubble">
+        <span class="instruction-text"> Tìm quả bóng đỏ nhé! </span>
+      </div>
+
+      <!-- SPEAKER -->
+      <div class="instruction-speaker">
+        <span class="speaker-wave"></span>
+        <span class="speaker-wave wave-delay"></span>
+
+        <span class="speaker-icon">🔊</span>
+      </div>
+    </button>
+
+    <!-- COLOR BALLS GRID -->
+    <div #itemsGrid class="color-grid">
+      @for (item of items; track item.id; let i = $index) {
+        <button
+          type="button"
+          class="color-card"
+          [class.theme-red]="item.id === 'red-ball'"
+          [class.theme-blue]="item.id === 'blue-ball'"
+          [class.theme-yellow]="item.id === 'yellow-ball'"
+          [class.is-correct-selected]="selectedId() === item.id && item.isTarget"
+          [class.is-wrong-selected]="selectedId() === item.id && !item.isTarget"
+          [class.is-dimmed]="selectedId() !== null && selectedId() !== item.id"
+          [style.--item-index]="i"
+          [attr.data-item-id]="item.id"
+          [disabled]="isBusy() || isCompleted()"
+          [attr.aria-label]="item.alt"
+          (click)="onSelectItem(item)"
+        >
+          <!-- SPARKLES -->
+          <span class="color-sparkle sparkle-a">✦</span>
+          <span class="color-sparkle sparkle-b">✧</span>
+
+          <!-- COLOR ARTBOARD -->
+          <div class="color-artboard">
+            <!-- GLOW -->
+            <div class="color-glow"></div>
+
+            <!-- RAYS -->
+            <div class="color-rays"></div>
+
+            <!-- ORBIT -->
+            <div class="color-orbit">
+              <span class="orbit-dot orbit-dot-one"></span>
+              <span class="orbit-dot orbit-dot-two"></span>
+            </div>
+
+            <!-- BALL IMAGE -->
+            <div class="color-ball-wrapper">
+              <img [src]="item.img" [alt]="item.alt" draggable="false" />
+            </div>
+
+            <!-- REFLECTION -->
+            <div class="color-reflection"></div>
+
+            <!-- FLOATING LIGHTS -->
+            <div class="color-light light-one"></div>
+            <div class="color-light light-two"></div>
+          </div>
+
+          <!-- PLATFORM -->
+          <div class="color-platform"></div>
+
+          <!-- FEEDBACK -->
+          @if (selectedId() === item.id) {
+            <div
+              class="color-feedback-icon"
+              [class.feedback-correct]="item.isTarget"
+              [class.feedback-wrong]="!item.isTarget"
+            >
+              @if (item.isTarget) {
+                ⭐
+              } @else {
+                ✨
+              }
+            </div>
+          }
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- WIN MODAL -->
+  @if (isCompleted()) {
+    <app-win-modal (replay)="handleReplay()" (goHome)="handleGoBack()"></app-win-modal>
+  }
+</div>

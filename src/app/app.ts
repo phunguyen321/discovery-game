@@ -3,15 +3,19 @@ import gsap from 'gsap';
 import { Home } from './home/home';
 import { SelectScreen } from './select-screen/select-screen';
 import { FindItem } from './find-item/find-item';
+import { FindAnimal } from './find-animal/find-animal';
+import { FindColor } from './find-color/find-color'; // <-- Import màn 3
+
+type ScreenType = 'home' | 'select' | 'gameplay' | 'gameplay-animal' | 'gameplay-color';
 
 @Component({
   selector: 'app-root',
-  imports: [Home, SelectScreen, FindItem],
+  imports: [Home, SelectScreen, FindItem, FindAnimal, FindColor], // <-- Đăng ký component
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
 export class App {
-  currentScreen = signal<'home' | 'select' | 'gameplay'>('home');
+  currentScreen = signal<ScreenType>('home');
   screenEl = viewChild<ElementRef<HTMLElement>>('screenEl');
 
   constructor() {
@@ -20,7 +24,7 @@ export class App {
     });
   }
 
-  switchToScreen(target: 'home' | 'select' | 'gameplay'): void {
+  switchToScreen(target: ScreenType): void {
     const el = this.screenEl()?.nativeElement;
     if (!el) {
       this.currentScreen.set(target);
@@ -57,7 +61,12 @@ export class App {
 
   handleSelectGame(gameId: string): void {
     console.log('Vào màn chơi:', gameId);
-    // Chuyển sang màn hình gameplay khi bé bấm vào cửa
-    this.switchToScreen('gameplay');
+    if (gameId === 'game-3a') {
+      this.switchToScreen('gameplay');
+    } else if (gameId === 'game-3b') {
+      this.switchToScreen('gameplay-animal');
+    } else if (gameId === 'game-3c') {
+      this.switchToScreen('gameplay-color'); // <-- Điều hướng sang màn tìm màu đỏ
+    }
   }
 }

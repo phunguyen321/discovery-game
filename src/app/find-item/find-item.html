@@ -1,14 +1,19 @@
-<div class="game-stage">
-  <!-- LỚP 1: NỀN ĐỒNG CỎ 3D -->
-  <img src="/images/bg-screen2.png" alt="Nền trò chơi" class="bg-layer" draggable="false" />
+<div class="game-stage find-item-stage">
+  <!-- BACKGROUND -->
+  <img src="/images/bg-find-item.png" alt="Khu vườn khám phá" class="bg-layer" draggable="false" />
 
-  <!-- LỚP 2: THANH ĐIỀU HƯỚNG TRÊN -->
+  <!-- SCENE DECORATIONS -->
+  <div class="scene-glow scene-glow-left"></div>
+  <div class="scene-glow scene-glow-right"></div>
+
+  <!-- TOP NAVIGATION -->
   <div class="top-nav-bar">
     <button
       type="button"
       class="icon-btn back-select-btn"
-      (click)="goBack.emit()"
-      aria-label="Quay lại chọn màn chơi"
+      (click)="handleGoBack()"
+      [disabled]="isBusy()"
+      aria-label="Quay lại chọn trò chơi"
     >
       🏠
     </button>
@@ -28,11 +33,23 @@
     </button>
   </div>
 
-  <!-- LỚP 3: NỘI DUNG CHÍNH TRÒ CHƠI -->
+  <!-- MAIN CONTENT -->
   <div class="ui-container">
-    <!-- KHUNG HƯỚNG DẪN NHÂN VẬT (BONG BÓNG THOẠI & SPEAKER CHUẨN) -->
-    <div class="speech-banner-wrapper" (click)="playInstructionVoice()">
+    <!-- INSTRUCTION BANNER -->
+    <button
+      type="button"
+      class="instruction-banner"
+      (click)="replayInstructionAudio()"
+      [disabled]="isBusy() || isCompleted()"
+      aria-label="Nghe lại hướng dẫn"
+    >
+      <span class="instruction-sparkle sparkle-one">✦</span>
+      <span class="instruction-sparkle sparkle-two">✧</span>
+
+      <!-- CHARACTER -->
       <div class="character-avatar-container">
+        <div class="avatar-glow"></div>
+
         <img
           src="/images/character-avatar.png"
           alt="Nhân vật hướng dẫn"
@@ -41,37 +58,89 @@
         />
       </div>
 
-      <div class="comic-speech-bubble">
-        <span class="speech-text">Bé tìm quả bóng nhé!</span>
-        <!-- Biểu tượng Speaker trực quan có hiệu ứng sóng âm -->
-        <div class="speaker-wave-box">
-          <span class="speaker-icon">🔊</span>
-          <span class="wave-ring"></span>
-        </div>
+      <!-- ONE LINE INSTRUCTION -->
+      <div class="instruction-bubble">
+        <span class="instruction-text"> Tìm quả bóng nhé! </span>
       </div>
-    </div>
 
-    <!-- KHU VỰC ĐỒ VẬT (HÌNH ẢNH TO RÕ, NỔI BẬT TRÊN NỀN) -->
-    <div class="items-grid">
-      @for (item of items; track item.id) {
-        <div
-          class="item-target"
+      <!-- SPEAKER -->
+      <div class="instruction-speaker">
+        <span class="speaker-wave"></span>
+        <span class="speaker-wave wave-delay"></span>
+
+        <span class="speaker-icon">🔊</span>
+      </div>
+    </button>
+
+    <!-- ITEMS GRID -->
+    <div #itemsGrid class="items-grid">
+      @for (item of items; track item.id; let i = $index) {
+        <button
+          type="button"
+          class="item-card"
+          [class.theme-ball]="item.id === 'ball'"
+          [class.theme-duck]="item.id === 'duck'"
+          [class.theme-bear]="item.id === 'bear'"
           [class.is-correct-selected]="selectedId() === item.id && item.isTarget"
           [class.is-wrong-selected]="selectedId() === item.id && !item.isTarget"
           [class.is-dimmed]="selectedId() !== null && selectedId() !== item.id"
+          [style.--item-index]="i"
+          [attr.data-item-id]="item.id"
+          [disabled]="isBusy() || isCompleted()"
+          [attr.aria-label]="item.alt"
           (click)="onSelectItem(item)"
         >
-          <!-- TIA SÁNG RẼ QUẠT PHÍA SAU KHI CHỌN ĐÚNG -->
-          @if (item.isTarget) {
-            <div class="sunburst-rays"></div>
-          }
+          <!-- DECORATIVE SPARKLES -->
+          <span class="item-sparkle sparkle-a">✦</span>
+          <span class="item-sparkle sparkle-b">✧</span>
 
-          <!-- HÌNH ẢNH ĐỒ VẬT TÁCH NỀN (KÍCH THƯỚC TO) -->
-          <div class="item-image-wrapper">
-            <img [src]="item.img" [alt]="item.alt" draggable="false" />
+          <!-- ITEM ARTBOARD -->
+          <div class="item-artboard">
+            <!-- COLORED GLOW -->
+            <div class="item-glow"></div>
+
+            <!-- SUNBURST -->
+            <div class="item-rays"></div>
+
+            <!-- ROTATING ORBIT -->
+            <div class="item-orbit">
+              <span class="orbit-dot"></span>
+            </div>
+
+            <!-- IMAGE -->
+            <div class="item-image-wrapper">
+              <img [src]="item.img" [alt]="item.alt" draggable="false" />
+            </div>
+
+            <!-- FLOATING LIGHTS -->
+            <div class="item-light light-one"></div>
+            <div class="item-light light-two"></div>
           </div>
-        </div>
+
+          <!-- GROUND PLATFORM -->
+          <div class="item-platform"></div>
+
+          <!-- FEEDBACK ICON -->
+          @if (selectedId() === item.id) {
+            <div
+              class="item-feedback-icon"
+              [class.feedback-correct]="item.isTarget"
+              [class.feedback-wrong]="!item.isTarget"
+            >
+              @if (item.isTarget) {
+                ⭐
+              } @else {
+                ✨
+              }
+            </div>
+          }
+        </button>
       }
     </div>
   </div>
+
+  <!-- WIN MODAL -->
+  @if (isCompleted()) {
+    <app-win-modal (replay)="handleReplay()" (goHome)="handleGoBack()"></app-win-modal>
+  }
 </div>

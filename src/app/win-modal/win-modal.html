@@ -1,0 +1,28 @@
+<div class="win-overlay">
+  <div class="win-modal">
+    <!-- Hình nền phủ toàn bộ modal -->
+
+    <div class="win-background">
+      <picture>
+        <!-- Màn hình dọc -->
+        <source media="(orientation: portrait)" srcset="/images/bg-win-doc.png" />
+
+        <!-- Màn hình ngang -->
+        <img src="/images/bg-win.png" alt="Hoan hô bé đã khám phá thật giỏi" draggable="false" />
+      </picture>
+    </div>
+
+    <!-- Các nút nằm đè lên hình nền -->
+    <div class="win-actions">
+      <button type="button" class="action-btn replay-btn" (click)="replay.emit()">
+        <span class="btn-icon">🔄</span>
+        <span>CHƠI LẠI</span>
+      </button>
+
+      <button type="button" class="action-btn home-btn" (click)="goHome.emit()">
+        <span class="btn-icon">🏠</span>
+        <span>VỀ TRANG CHỦ</span>
+      </button>
+    </div>
+  </div>
+</div>

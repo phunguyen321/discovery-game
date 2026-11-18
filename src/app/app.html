@@ -18,5 +18,15 @@
         <app-find-item (goBack)="switchToScreen('select')" />
       </div>
     }
+    @case ('gameplay-animal') {
+      <div #screenEl class="screen-box">
+        <app-find-animal (goBack)="switchToScreen('select')" />
+      </div>
+    }
+    @case ('gameplay-color') {
+      <div #screenEl class="screen-box">
+        <app-find-color (goBack)="switchToScreen('select')" />
+      </div>
+    }
   }
 </div>

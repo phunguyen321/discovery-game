@@ -1,13 +1,14 @@
 <div class="game-stage">
-  <!-- LỚP 1: NỀN ĐỒNG CỎ 3D -->
+  <!-- BACKGROUND -->
   <img src="/images/bg-screen2.png" alt="Đồng cỏ xanh" class="bg-layer" draggable="false" />
 
-  <!-- LỚP 2: NÚT VỀ TRANG CHỦ & NÚT ÂM THANH -->
+  <!-- TOP NAVIGATION -->
   <div class="top-nav-bar">
     <button
       type="button"
       class="icon-btn home-nav-btn"
       (click)="goHome.emit()"
+      [disabled]="activeDoor() !== null"
       aria-label="Về trang chủ"
     >
       🏠
@@ -18,46 +19,88 @@
       class="icon-btn sound-btn"
       [class.is-muted]="isMuted()"
       (click)="toggleAudio($event)"
+      [disabled]="activeDoor() !== null"
       aria-label="Bật tắt âm thanh"
     >
       @if (!isMuted()) {
-        <svg viewBox="0 0 24 24" class="music-icon">
-          <path
-            d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"
-            fill="#FFFFFF"
-            stroke="#B45309"
-            stroke-width="1.5"
-          />
-        </svg>
+        🔊
       } @else {
-        <span class="mute-icon">🔇</span>
+        🔇
       }
     </button>
   </div>
 
-  <!-- LỚP 3: NỘI DUNG CHÍNH (TIÊU ĐỀ & 3 CÁNH CỬA) -->
+  <!-- MAIN CONTENT -->
   <div class="ui-container">
-    <div class="prompt-banner">
-      <h2 class="prompt-text">Bé muốn khám phá gì nào?</h2>
-    </div>
+    <!-- MAGICAL GUIDE PROMPT -->
+    <button
+      type="button"
+      class="prompt-banner"
+      (click)="replayPromptAudio()"
+      [disabled]="activeDoor() !== null"
+      aria-label="Nghe lời hướng dẫn"
+    >
+      <span class="prompt-sparkle sparkle-left">✦</span>
+      <span class="prompt-sparkle sparkle-top">✧</span>
+      <span class="prompt-sparkle sparkle-right">✦</span>
 
-    <div class="doors-grid">
-      @for (door of doors; track door.id) {
-        <div
+      <!-- CHARACTER -->
+      <div class="prompt-avatar">
+        <div class="avatar-glow"></div>
+
+        <img src="/images/character-avatar.png" alt="Nhân vật hướng dẫn" draggable="false" />
+      </div>
+
+      <!-- ONE LINE TEXT -->
+      <div class="prompt-bubble">
+        <span class="prompt-text"> Cùng khám phá nhé! </span>
+      </div>
+
+      <!-- SPEAKER -->
+      <div class="prompt-speaker">
+        <span class="speaker-wave"></span>
+        <span class="speaker-wave wave-delay"></span>
+
+        <span class="speaker-icon">🔊</span>
+      </div>
+    </button>
+
+    <!-- DOORS GRID -->
+    <div #doorsGrid class="doors-grid">
+      @for (door of doors; track door.id; let i = $index) {
+        <button
+          type="button"
           class="door-card"
           [class.is-selected]="activeDoor() === door.id"
+          [class.is-unselected]="activeDoor() !== null && activeDoor() !== door.id"
+          [style.--door-index]="i"
+          [attr.data-door-id]="door.id"
+          [attr.aria-label]="'Chọn trò chơi ' + door.title"
+          [disabled]="activeDoor() !== null"
           (click)="onSelectDoor(door.id)"
         >
-          <!-- CHÙM TIA SÁNG RẼ QUẠT TỎA RA TỪ PHÍA SAU -->
-          <div class="sunburst-rays"></div>
-
+          <!-- DOOR IMAGE -->
           <div class="door-image-wrapper">
+            <!-- MAGIC GLOW -->
+            <div class="door-magic-glow"></div>
+
+            <!-- SUNBURST -->
+            <div class="sunburst-rays"></div>
+
+            <!-- IMAGE -->
             <img [src]="door.img" [alt]="door.alt" draggable="false" />
           </div>
-          <div class="door-label-badge">
+
+          <!-- DOOR LABEL -->
+          <div
+            class="door-label-badge"
+            [class.badge-orange]="door.id === 'game-3a'"
+            [class.badge-pink]="door.id === 'game-3b'"
+            [class.badge-purple]="door.id === 'game-3c'"
+          >
             <span>{{ door.title }}</span>
           </div>
-        </div>
+        </button>
       }
     </div>
   </div>

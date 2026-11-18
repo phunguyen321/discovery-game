@@ -1,0 +1,145 @@
+<div class="game-stage find-animal-stage">
+  <!-- BACKGROUND -->
+  <img src="/images/bg-screen2.png" alt="Khu vườn động vật" class="bg-layer" draggable="false" />
+
+  <!-- SCENE DECORATIONS -->
+  <div class="animal-decoration paw-decoration paw-one">🐾</div>
+  <div class="animal-decoration paw-decoration paw-two">🐾</div>
+  <div class="animal-decoration leaf-decoration leaf-one">🌿</div>
+  <div class="animal-decoration leaf-decoration leaf-two">🍃</div>
+
+  <div class="scene-glow scene-glow-left"></div>
+  <div class="scene-glow scene-glow-right"></div>
+
+  <!-- TOP NAVIGATION -->
+  <div class="top-nav-bar">
+    <button
+      type="button"
+      class="icon-btn back-select-btn"
+      (click)="handleGoBack()"
+      [disabled]="isBusy()"
+      aria-label="Quay lại"
+    >
+      🏠
+    </button>
+
+    <button
+      type="button"
+      class="icon-btn sound-btn"
+      [class.is-muted]="isMuted()"
+      (click)="toggleAudio($event)"
+      aria-label="Bật tắt âm thanh"
+    >
+      @if (!isMuted()) {
+        🔊
+      } @else {
+        🔇
+      }
+    </button>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="ui-container">
+    <!-- INSTRUCTION BANNER -->
+    <button
+      type="button"
+      class="instruction-banner"
+      (click)="replayInstructionAudio()"
+      [disabled]="isBusy() || isCompleted()"
+      aria-label="Nghe lại hướng dẫn"
+    >
+      <span class="instruction-sparkle sparkle-one">✦</span>
+      <span class="instruction-sparkle sparkle-two">✧</span>
+
+      <div class="character-avatar-container">
+        <div class="avatar-glow"></div>
+
+        <img
+          src="/images/character-avatar.png"
+          alt="Nhân vật hướng dẫn"
+          class="character-img"
+          draggable="false"
+        />
+      </div>
+
+      <div class="instruction-bubble">
+        <span class="instruction-text"> Tìm con gà nhé! </span>
+      </div>
+
+      <div class="instruction-speaker">
+        <span class="speaker-wave"></span>
+        <span class="speaker-wave wave-delay"></span>
+
+        <span class="speaker-icon">🔊</span>
+      </div>
+    </button>
+
+    <!-- ANIMAL GRID -->
+    <div #itemsGrid class="animal-grid">
+      @for (item of items; track item.id; let i = $index) {
+        <button
+          type="button"
+          class="animal-card"
+          [class.theme-chicken]="item.id === 'chicken'"
+          [class.theme-dog]="item.id === 'dog'"
+          [class.theme-cat]="item.id === 'cat'"
+          [class.is-correct-selected]="selectedId() === item.id && item.isTarget"
+          [class.is-wrong-selected]="selectedId() === item.id && !item.isTarget"
+          [class.is-dimmed]="selectedId() !== null && selectedId() !== item.id"
+          [style.--item-index]="i"
+          [attr.data-item-id]="item.id"
+          [disabled]="isBusy() || isCompleted()"
+          [attr.aria-label]="item.alt"
+          (click)="onSelectItem(item)"
+        >
+          <!-- SPARKLES -->
+          <span class="animal-sparkle sparkle-a">✦</span>
+          <span class="animal-sparkle sparkle-b">✧</span>
+
+          <!-- ANIMAL ARTBOARD -->
+          <div class="animal-artboard">
+            <div class="animal-glow"></div>
+
+            <div class="animal-rays"></div>
+
+            <div class="animal-orbit">
+              <span class="orbit-dot"></span>
+            </div>
+
+            <!-- ANIMAL IMAGE -->
+            <div class="animal-image-wrapper">
+              <img [src]="item.img" [alt]="item.alt" draggable="false" />
+            </div>
+
+            <!-- LIGHT EFFECT -->
+            <div class="animal-light light-one"></div>
+            <div class="animal-light light-two"></div>
+          </div>
+
+          <!-- GROUND PLATFORM -->
+          <div class="animal-platform"></div>
+
+          <!-- FEEDBACK -->
+          @if (selectedId() === item.id) {
+            <div
+              class="animal-feedback-icon"
+              [class.feedback-correct]="item.isTarget"
+              [class.feedback-wrong]="!item.isTarget"
+            >
+              @if (item.isTarget) {
+                ⭐
+              } @else {
+                ✨
+              }
+            </div>
+          }
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- WIN MODAL -->
+  @if (isCompleted()) {
+    <app-win-modal (replay)="handleReplay()" (goHome)="handleGoBack()"></app-win-modal>
+  }
+</div>
