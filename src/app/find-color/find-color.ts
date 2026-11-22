@@ -89,11 +89,11 @@ export class FindColor implements OnInit, OnDestroy {
 
   private audioFiles: Record<AudioKey, string> = {
 
-    instruction: '/audio/find-color-instruction.mp3',
+    instruction: '/audio/find-color.mp3',
 
-    correct: '/audio/find-color-correct.mp3',
+    correct: '/audio/correct.mp3',
 
-    wrong: '/audio/find-color-wrong.mp3'
+    wrong: '/audio/wrong.wav'
 
   };
 

@@ -1,4 +1,11 @@
-import { Component, output, signal, OnInit } from '@angular/core';
+
+import {
+  Component,
+  output,
+  signal,
+  OnInit,
+  OnDestroy
+} from '@angular/core';
 
 @Component({
   standalone: true,
@@ -6,14 +13,19 @@ import { Component, output, signal, OnInit } from '@angular/core';
   templateUrl: './home.html',
   styleUrl: './home.scss'
 })
-export class Home implements OnInit {
+export class Home implements OnInit, OnDestroy {
+
   // Event phát ra khi bé bấm BẮT ĐẦU
   startGame = output<void>();
 
+  // Trạng thái âm thanh
   isMuted = signal<boolean>(false);
   isStarting = signal<boolean>(false);
 
-  // Chia từng chữ cái với màu sắc chuẩn theo mockup
+  // Đối tượng âm thanh
+  private welcomeAudio?: HTMLAudioElement;
+
+  // Tiêu đề dòng 1
   titleRow1 = [
     { char: 'B', color: '#FF7EB3' },
     { char: 'É', color: '#FF7EB3', spaceAfter: true },
@@ -22,6 +34,7 @@ export class Home implements OnInit {
     { char: ',', color: '#FF914D' }
   ];
 
+  // Tiêu đề dòng 2
   titleRow2 = [
     { char: 'C', color: '#FF7EB3' },
     { char: 'Ù', color: '#FF7EB3' },
@@ -37,38 +50,72 @@ export class Home implements OnInit {
     { char: '!', color: '#FFBD59' }
   ];
 
+  // Khởi tạo khi vào màn hình
   ngOnInit(): void {
-    // Khởi tạo giọng nói ngay khi load (lưu ý trình duyệt mobile cần 1 chạm đầu tiên mới phát audio)
+    this.initWelcomeAudio();
   }
 
+  // Khởi tạo audio
+  private initWelcomeAudio(): void {
+    this.welcomeAudio = new Audio('/audio/intro.m4a');
+
+    this.welcomeAudio.preload = 'auto';
+    this.welcomeAudio.volume = 1;
+    this.welcomeAudio.loop = false;
+
+    // Tự động phát khi vào màn hình
+    this.playWelcomeAudio();
+  }
+
+  // Bật / tắt âm thanh
   toggleAudio(event: Event): void {
     event.stopPropagation();
-    this.isMuted.update(m => !m);
+
+    this.isMuted.update(muted => !muted);
+
     if (this.isMuted()) {
-      window.speechSynthesis?.cancel();
+      this.welcomeAudio?.pause();
     } else {
-      this.playWelcomeVoice();
+      this.playWelcomeAudio();
     }
   }
 
+  // Khi bé bấm BẮT ĐẦU
   onStartClick(): void {
     if (this.isStarting()) return;
-    this.isStarting.set(true);
-    this.playWelcomeVoice();
 
-    // Hiệu ứng nút nảy nhẹ 350ms trước khi chuyển màn 2
+    this.isStarting.set(true);
+
+    // Dừng âm thanh trước khi chuyển màn
+    this.welcomeAudio?.pause();
+
+    // Hiệu ứng nút nảy nhẹ 350ms
     setTimeout(() => {
       this.startGame.emit();
     }, 350);
   }
 
-  private playWelcomeVoice(): void {
-    if (this.isMuted() || typeof window === 'undefined' || !('speechSynthesis' in window)) return;
-    window.speechSynthesis.cancel();
-    const msg = new SpeechSynthesisUtterance('Xin chào các bé! Hôm nay chúng mình cùng khám phá nhé!');
-    msg.lang = 'vi-VN';
-    msg.rate = 0.9;
-    msg.pitch = 1.15;
-    window.speechSynthesis.speak(msg);
+  // Phát âm thanh chào mừng
+  private playWelcomeAudio(): void {
+    if (this.isMuted() || !this.welcomeAudio) return;
+
+    // Phát lại từ đầu
+    this.welcomeAudio.currentTime = 0;
+
+    this.welcomeAudio.play().catch(error => {
+      console.warn(
+        'Trình duyệt chưa cho phép phát âm thanh:',
+        error
+      );
+    });
+  }
+
+  // Hủy audio khi rời màn hình
+  ngOnDestroy(): void {
+    if (this.welcomeAudio) {
+      this.welcomeAudio.pause();
+      this.welcomeAudio.currentTime = 0;
+      this.welcomeAudio = undefined;
+    }
   }
 }

@@ -89,11 +89,11 @@ export class FindAnimal implements OnInit, OnDestroy {
 
   private audioFiles: Record<AudioKey, string> = {
 
-    instruction: '/audio/find-animal-instruction.mp3',
+    instruction: '/audio/find-animal.m4a',
 
-    correct: '/audio/find-animal-correct.mp3',
+    correct: '/audio/correct.mp3',
 
-    wrong: '/audio/find-animal-wrong.mp3'
+    wrong: '/audio/wrong.wav'
 
   };
 
